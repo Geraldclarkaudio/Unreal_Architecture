@@ -61,6 +61,27 @@ void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void AShip::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp,
+	bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+	if (isLandedSafely())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ship landed safely"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ship not landed safely"));
+	}
+}
+
+bool AShip::isLandedSafely()
+{
+	FRotator currentRot = GetActorRotation();
+	float acceptableRollRange = 80.f;
+	return FMath::Abs(currentRot.Roll) <= acceptableRollRange;
+}
+
 void AShip::PropelUp(const FInputActionValue& Value) {
 	
 	//get what the value is 
